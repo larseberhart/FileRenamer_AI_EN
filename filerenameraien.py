@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-filerenameraien.py — Intelligent PDF renaming with a local AI model (Ollama)
+filerenameraien.py - Intelligent PDF renaming with a local AI model (Ollama)
 =============================================================================
 
 This script reads the text from PDF files, sends it to a locally running
@@ -216,7 +216,7 @@ def discover_pdfs(path: Path, recursive: bool) -> list[Path]:
 def _ocr_pdf(pdf_path: Path, max_pages: int, max_chars: int) -> str:
     """Converts PDF pages to images and extracts text via Tesseract OCR (English)."""
     if not _OCR_AVAILABLE:
-        print("  [ocr] pytesseract/pdf2image not installed — OCR skipped.")
+        print("  [ocr] pytesseract/pdf2image not installed. OCR skipped.")
         print("  [ocr] Install with: pip install pytesseract pdf2image")
         print("  [ocr] System tools: brew install tesseract tesseract-lang poppler")
         return ""
@@ -292,7 +292,7 @@ def extract_pdf_text(
     if verbose and result:
         print(f"  [extract] Text preview: {result[:300]!r}...")
 
-    # No embedded text found — try OCR fallback via Tesseract
+    # No embedded text found - try OCR fallback via Tesseract
     if not result:
         print("  [extract] No embedded text found, trying OCR fallback ...")
         result = _ocr_pdf(pdf_path, max_pages=max_pages, max_chars=max_chars)
@@ -314,14 +314,14 @@ def build_prompt(file_name: str, extracted_text: str) -> str:
         "Reminder, Receipt, PaySlip).\n"
         '  "keywords": Comma-separated list of two to four keywords (separated by spaces in the filename). '
         "The order must be strictly followed: "
-        "1. Sender of the document (company, authority, or person who issued it) — mandatory. "
+        "1. Sender of the document (company, authority, or person who issued it), mandatory. "
         "2. Order number, invoice number, or another unique identifier, if available. "
         "3. Product, service, contract number, or main topic of the document. "
         "4. One further keyword that clarifies the context (e.g. plan name, location, item description). "
         "Never include the recipient of the document as a keyword. "
         "Never use the word 'ShippingCosts' as a keyword. "
         "Preserve spaces within a keyword (do not replace with hyphens), "
-        "only ASCII letters, digits, spaces, and hyphens are allowed — remove all other special characters.\n"
+        "only ASCII letters, digits, spaces, and hyphens are allowed; remove all other special characters.\n"
         "No further explanations, only the JSON object.\n\n"
         f"Filename: {file_name}\n"
         "Extracted PDF text:\n"

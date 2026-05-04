@@ -31,7 +31,7 @@ YYYY-MM-DD_DocumentType_Sender Keyword2 Keyword3.pdf
 
 ## Installation
 
-> **Tip:** If you prefer not to set things up manually, you can use the included setup script — it handles all of the following steps automatically.
+> **Tip:** If you prefer not to set things up manually, you can use the included setup script, it handles all of the following steps automatically.
 
 ---
 
@@ -56,7 +56,7 @@ The script performs the following actions, with confirmation before each step:
 | 7 | **Activate** the virtual environment in the current shell session |
 | 8 | Start **Ollama** in the background (`ollama serve`) if not already running |
 
-Already installed components are automatically detected and skipped — nothing will be installed twice.
+Already installed components are automatically detected and skipped; nothing will be installed twice.
 
 ### Prerequisites
 
@@ -75,7 +75,7 @@ chmod +x setup.sh
 
 The script walks through all steps and asks for confirmation (`y` for yes,
 `n` / Enter for no) before each installation. To skip a step, simply answer
-`n` — all remaining steps will still be offered.
+`n`: all remaining steps will still be offered.
 
 ### Note on venv activation
 
@@ -139,7 +139,7 @@ brew install tesseract tesseract-lang poppler
 | `poppler` | PDF-to-image conversion for `pdf2image` |
 
 If Tesseract is not installed, scanned PDFs are automatically skipped
-and a notice is displayed — everything else continues to work normally.
+and a notice is displayed; everything else continues to work normally.
 
 ### 5. Download an Ollama model
 
@@ -210,7 +210,7 @@ python filerenamerkide.py ~/Documents/Invoices --verbose
 ```
 
 With `--verbose`, the raw Ollama response and a text preview of the
-PDF extraction are also printed — useful for troubleshooting.
+PDF extraction are also printed, which is useful for troubleshooting.
 
 ---
 
@@ -258,9 +258,9 @@ OK    invoice_april.pdf -> 2024-04-01_Invoice_Amazon Order-12345 Kindle.pdf (ren
 ```
 
 **Status lines at the end:**
-- `OK` — File successfully renamed
-- `SKIPPED` — File skipped (no extractable text)
-- `ERROR` — Error during processing (e.g. Ollama not reachable)
+- `OK`: File successfully renamed
+- `SKIPPED`: File skipped (no extractable text)
+- `ERROR`: Error during processing (e.g. Ollama not reachable)
 
 **Exit codes:**
 - `0`: All files processed successfully
@@ -271,26 +271,26 @@ OK    invoice_april.pdf -> 2024-04-01_Invoice_Amazon Order-12345 Kindle.pdf (ren
 
 ## How It Works
 
-1. **PDF detection** — The script finds all `.pdf` files at the given path (optionally recursive).
-2. **Text extraction** — `pypdf` extracts the embedded text page by page, limited to `--max-chars` characters.
-3. **OCR fallback** — If the PDF contains no embedded text (e.g. scanned documents), pages are automatically converted to images using `pdf2image` and read with Tesseract OCR (language: German). If the German language pack is not installed, English is used as a fallback. If `pytesseract` or `pdf2image` are missing entirely, the file is skipped.
-4. **AI analysis** — The text is sent to Ollama along with a prompt. The model returns a JSON object containing:
-   - `date` — Document date in `YYYY-MM-DD` format
-   - `doc_type` — Document type (Invoice, Contract, BankStatement, …)
-   - `keywords` — 2–4 keywords in a defined order: sender, identifier, topic, detail
-5. **Sanitization** — Special characters are removed; spaces within a keyword are preserved.
-6. **Collision avoidance** — If the target filename already exists, `-2`, `-3`, etc. are appended automatically.
-7. **Renaming** — The file is renamed in place within the same folder.
+1. **PDF detection:** The script finds all `.pdf` files at the given path (optionally recursive).
+2. **Text extraction:** `pypdf` extracts the embedded text page by page, limited to `--max-chars` characters.
+3. **OCR fallback:** If the PDF contains no embedded text (e.g. scanned documents), pages are automatically converted to images using `pdf2image` and read with Tesseract OCR (language: German). If the German language pack is not installed, English is used as a fallback. If `pytesseract` or `pdf2image` are missing entirely, the file is skipped.
+4. **AI analysis:** The text is sent to Ollama along with a prompt. The model returns a JSON object containing:
+   - `date`: Document date in `YYYY-MM-DD` format
+   - `doc_type`: Document type (Invoice, Contract, BankStatement, ...)
+   - `keywords`: 2-4 keywords in a defined order: sender, identifier, topic, detail
+5. **Sanitization:** Special characters are removed; spaces within a keyword are preserved.
+6. **Collision avoidance:** If the target filename already exists, `-2`, `-3`, etc. are appended automatically.
+7. **Renaming:** The file is renamed in place within the same folder.
 
 ---
 
 ## Notes and Limitations
 
-- **Scanned PDFs** — These are automatically processed via Tesseract OCR if `pytesseract`, `pdf2image`, and the Tesseract system tool are installed. If any of these are missing, the file is skipped.
-- **OCR quality** — Tesseract's recognition accuracy depends on scan quality. Very poor scans (low resolution, handwriting) may result in inaccurate naming.
-- **Naming quality** — Directly depends on the model used and the quality of the extracted text. Larger models generally produce better results.
+- **Scanned PDFs:** These are automatically processed via Tesseract OCR if `pytesseract`, `pdf2image`, and the Tesseract system tool are installed. If any of these are missing, the file is skipped.
+- **OCR quality:** Tesseract's recognition accuracy depends on scan quality. Very poor scans (low resolution, handwriting) may result in inaccurate naming.
+- **Naming quality:** Directly depends on the model used and the quality of the extracted text. Larger models generally produce better results.
 - **Reasoning models** (e.g. `qwen3.5`) that return their answer in the `thinking` field instead of the `response` field are automatically detected and supported.
-- **No internet connection required** — The entire model and OCR run locally on your own machine.
+- **No internet connection required:** The entire model and OCR run locally on your own machine.
 
 ---
 
